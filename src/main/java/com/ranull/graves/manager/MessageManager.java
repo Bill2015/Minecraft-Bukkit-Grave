@@ -121,7 +121,7 @@ public class MessageManager {
         .replace("&", "§")
         .replace("$entity's", player.getName())
         .replace("$positon", 
-            String.join(",", 
+            String.join(", ", 
                 Integer.toString(location.getBlockX()), 
                 Integer.toString(location.getBlockY()), 
                 Integer.toString(location.getBlockY()) 

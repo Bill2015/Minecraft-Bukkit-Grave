@@ -9,6 +9,7 @@ import com.ranull.graves.inventory.GraveListInventory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
@@ -441,6 +442,7 @@ public class GraveManager {
         graveInventory.setReplace(location.getBlock().getType());
         graveInventory.setEquipment(player.getEquipment());
         graveInventory.setMainHand(player.getInventory().getItemInMainHand());
+        graveInventory.setDeathCount(player.getStatistic(Statistic.DEATHS));
 
         GraveCreateEvent graveCreateEvent = new GraveCreateEvent(graveInventory);
         plugin.getServer().getPluginManager().callEvent(graveCreateEvent);
@@ -463,6 +465,18 @@ public class GraveManager {
                 .replace("&", "§");
         if (!deathMessage.equals("")) {
             player.sendMessage(deathMessage);
+        }
+
+        String broadcastMessage = Objects.requireNonNull(plugin.getConfig().getString("settings.deathBoradcastMessage"))
+                .replace("$entity's", player.getName())
+                .replace("$positon", 
+                String.join(", ", 
+                    Integer.toString(location.getBlockX()), 
+                    Integer.toString(location.getBlockY()), 
+                    Integer.toString(location.getBlockY()) 
+                ) );
+        if (!broadcastMessage.equals("")) {
+            Bukkit.broadcastMessage( broadcastMessage );
         }
 
         return graveInventory;
@@ -1410,6 +1424,14 @@ public class GraveManager {
                     equipment.setBootsDropChance(0.0f);
                 }
             }
+
+            double maxHealth = plugin.getConfig().getDouble("setting.zombieHealthMultiple") * graveInventory.getDeathCount() + plugin.getConfig().getInt("setting.zombieBaseHealth");
+            double maxAttack = plugin.getConfig().getDouble("setting.zombieAttackMultiple") * graveInventory.getDeathCount() + livingEntity.getAttribute( Attribute.GENERIC_ATTACK_DAMAGE ).getBaseValue();
+            double maxSpeed  = plugin.getConfig().getDouble("setting.zombieSpeedMultiple") * graveInventory.getDeathCount() + livingEntity.getAttribute( Attribute.GENERIC_MOVEMENT_SPEED ).getBaseValue();
+            livingEntity.getAttribute( Attribute.GENERIC_MAX_HEALTH ).setBaseValue( maxHealth );
+            livingEntity.setHealth( maxHealth );
+            livingEntity.getAttribute( Attribute.GENERIC_ATTACK_DAMAGE ).setBaseValue( maxAttack );
+            livingEntity.getAttribute( Attribute.GENERIC_MOVEMENT_SPEED ).setBaseValue( maxSpeed );
 
             if (!plugin.getConfig().getBoolean("settings.zombiePickup")) {
                 livingEntity.setCanPickupItems(false);

@@ -32,6 +32,7 @@ public class GraveInventory implements InventoryHolder {
 
     private EntityEquipment equipment;
     private ItemStack mainHand;
+    private int totalDeathCount;
 
     public GraveInventory(Location location, Inventory itemInventory, String title) {
         this.location = location;
@@ -158,4 +159,10 @@ public class GraveInventory implements InventoryHolder {
         return mainHand;
     }
 
+    public void setDeathCount( int deathCount ){
+        this.totalDeathCount = deathCount;
+    }
+    public int getDeathCount(){
+        return totalDeathCount;
+    }
 }
