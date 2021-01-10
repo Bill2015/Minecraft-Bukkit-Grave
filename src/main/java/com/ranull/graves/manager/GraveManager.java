@@ -1387,7 +1387,7 @@ public class GraveManager {
 
             if( livingEntity instanceof Zombie ){
                 Random random = new Random();
-                if( random.nextInt(10) > 5 ){
+                if( random.nextInt(12) < 3 ){
                     ((Zombie)livingEntity).setBaby( true );
                 }
             }

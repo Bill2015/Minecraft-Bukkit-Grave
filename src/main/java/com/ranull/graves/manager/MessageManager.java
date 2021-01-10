@@ -120,9 +120,13 @@ public class MessageManager {
         String lootingMessage = Objects.requireNonNull(plugin.getConfig().getString("settings.successfulLootingMessage"))
         .replace("&", "§")
         .replace("$entity's", player.getName())
-        .replace("$positon", location.toString());
+        .replace("$positon", 
+            String.join(",", 
+                Integer.toString(location.getBlockX()), 
+                Integer.toString(location.getBlockY()), 
+                Integer.toString(location.getBlockY()) 
+            ) );
         
         Bukkit.broadcastMessage( lootingMessage );
     }
 }
-

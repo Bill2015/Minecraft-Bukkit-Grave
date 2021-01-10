@@ -75,7 +75,7 @@ settings:
   permissionDeniedMessage: "&8[&7Graves&8] &fPermission Denied!"
   protectProtectedMessage: "&c&lProtected"
   protectUnprotectedMessage: "&a&lUnprotected"
-  successfulLootingMessage: "&8[&7Graves&8] &5$entity's &ahas retrieved his item at &9[$positon]"
+  successfulLootingMessage: "&8[&7Graves Broadcast&8] &b$entity's &ahas retrieved his item at &9[$positon]"
 
   ########
   # Time #
