@@ -125,10 +125,4 @@ public class MessageManager {
         Bukkit.broadcastMessage( lootingMessage );
     }
 }
-A Minecraft Bukkit plugin, Genterate a grave when player died. The original is Ranull
 
-
-Add:
-     - Let zombie equip same with the died player
-     - Has 50% chance is a baby zombie
-     - Brocast the message when a player retrive his staff
