@@ -1,6 +1,7 @@
 package com.ranull.graves;
 
 import com.ranull.graves.commands.GravesCommand;
+import com.ranull.graves.listeners.EntityEvent;
 import com.ranull.graves.listeners.Events;
 import com.ranull.graves.hooks.VaultHook;
 import com.ranull.graves.manager.*;
@@ -35,6 +36,7 @@ public final class Graves extends JavaPlugin {
                 setExecutor(new GravesCommand(this, data, graveManager, guiManager, recipeManager, messageManager));
 
         getServer().getPluginManager().registerEvents(new Events(this, graveManager, guiManager, messageManager), this);
+        getServer().getPluginManager().registerEvents(new EntityEvent(this), this);
     }
 
     @Override

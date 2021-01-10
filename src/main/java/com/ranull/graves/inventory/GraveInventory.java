@@ -30,7 +30,7 @@ public class GraveInventory implements InventoryHolder {
     private boolean protect;
     private boolean unlink;
 
-    private EntityEquipment equipment;
+    private ItemStack[] equipment;
     private ItemStack mainHand;
     private int totalDeathCount;
 
@@ -144,11 +144,11 @@ public class GraveInventory implements InventoryHolder {
         this.unlink = unlink;
     }
 
-    public void setEquipment(EntityEquipment equipment){
+    public void setEquipment(ItemStack[] equipment){
         this.equipment = equipment;
     }
 
-    public EntityEquipment getEquipment(){
+    public ItemStack[] getEquipment(){
         return equipment;
     }
 

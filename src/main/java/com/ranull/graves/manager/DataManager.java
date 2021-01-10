@@ -139,7 +139,7 @@ public class DataManager {
 
     public String getGraveTitle(OfflinePlayer player) {
         String graveTitle = Objects.requireNonNull(plugin.getConfig().getString("settings.title"))
-                .replace("$entity", Objects.requireNonNull(player.getName()))
+                .replace("$entity's", Objects.requireNonNull(player.getName()))
                 .replace("&", "§");
         if (graveTitle.equals("")) {
             graveTitle = player.getName() + "'s Grave";

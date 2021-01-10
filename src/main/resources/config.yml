@@ -23,9 +23,9 @@ settings:
   # Graves #
   ##########
   block: PLAYER_HEAD # Material: PLAYER_HEAD, CHEST, BEACON (AIR to disable)
-  time: 10800 # (Second) How long graves should stay alive for, 10800 = 3 hours, 0 lasts forever.
+  time: 0 # (Second) How long graves should stay alive for, 10800 = 3 hours, 0 lasts forever.
 
-  headSkinType: 1 # 0 = Player/Entity head, 1 = Custom texture, 2 = Player username.
+  headSkinType: 0 # 0 = Player/Entity head, 1 = Custom texture, 2 = Player username.
   headSkin: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdjYWI1NmM4MmNiODFiZGI5OTc5YTQ2NGJjOWQzYmEzZTY3MjJiYTEyMmNmNmM1Mjg3MzAxMGEyYjU5YWVmZSJ9fX0="
   #headSkin: "MHF_Chest" # If headSkinType is set to 2.
 
@@ -38,15 +38,15 @@ settings:
   ignoreKeepInventory: false # Should the plugin ignore the keep inventory gamerule.
 
   break: true # Can graves be broken.
-  explode: true # Can graves be blown up.
+  explode: false # Can graves be blown up.
 
   createPvP: true # Create a grave if a player dies to another player.
   createPvE: true # Create a grave if a player dies to a mob.
   createEnvironmental: true # Create a grave if a player dies to things such as fall damage, lava and suffocation.
 
   placeGround: true # If the player dies in the air should the grave find the ground under the player to place it on.
-  placeLavaTop: true # If the player dies in lava should it be placed at the top, this will override placeGround if it can.
-  placeVoid: true # If the player died in the void, should it place a grave in the air.
+  placeLavaTop: false # If the player dies in lava should it be placed at the top, this will override placeGround if it can.
+  placeVoid: false # If the player died in the void, should it place a grave in the air.
 
   walkOver: false # Should graves be looted if walked over.
 
@@ -140,7 +140,7 @@ settings:
   ##############
   # If expStore is false it will store what Minecraft would normally drop, if you want to fully disable it, set expStore to true and expStorePercent to 0.
   expStore: true # Should all the players EXP be stored in the grave. If false only the vanilla drop amount will be stored.
-  expStorePercent: 0.8 # How much of the EXP should be stored, 0.8 = 80%, 1 = 100%, 0 = 0%.
+  expStorePercent: 0.5 # How much of the EXP should be stored, 0.8 = 80%, 1 = 100%, 0 = 0%.
   expLevelRound: true # If using $level should it be rounded to a whole number.
 
   ###########
@@ -148,12 +148,12 @@ settings:
   ###########
   zombieType: ZOMBIE # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/LivingEntity.html
   zombieName: "$owner's Zombie"
-  zombieOwner: false # Should a grave spawn a zombie when it is looted by its owner.
+  zombieOwner: true # Should a grave spawn a zombie when it is looted by its owner.
   zombieOther: true # Should a grave spawn a zombie if it is looted by another player.
   zombieOnlyBreak: false # Should a zombie only spawn if the player broke the grave not open it.
-  zombieExplode: false # Should a grave spawn a zombie if it is blown up, this only works if the grave can be blown up.
+  zombieExplode: true # Should a grave spawn a zombie if it is blown up, this only works if the grave can be blown up.
   zombieOwnerHead: true # Will the zombie have the owners head on.
-  zombiePickup: false # Can the zombie pickup dropped items.
+  zombiePickup: true # Can the zombie pickup dropped items.
   zombieDrops: false # Do grave zombies drop items, this may include the head it is wearing.
   
   zombieBaseHealth: 20 # How much health the zombie has.
@@ -328,3 +328,5 @@ settings:
     - RED_NETHER_BRICK_SLAB
     - POLISHED_ANDESITE_SLAB
     - NETHER_PORTAL
+
+  creeperExplosionRadius: 7

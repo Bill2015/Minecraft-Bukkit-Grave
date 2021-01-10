@@ -440,7 +440,7 @@ public class GraveManager {
         graveInventory.setPlayer(player);
         graveInventory.setKiller(player.getKiller());
         graveInventory.setReplace(location.getBlock().getType());
-        graveInventory.setEquipment(player.getEquipment());
+        graveInventory.setEquipment(player.getEquipment().getArmorContents());
         graveInventory.setMainHand(player.getInventory().getItemInMainHand());
         graveInventory.setDeathCount(player.getStatistic(Statistic.DEATHS));
 
@@ -470,11 +470,12 @@ public class GraveManager {
         String broadcastMessage = Objects.requireNonNull(plugin.getConfig().getString("settings.deathBoradcastMessage"))
                 .replace("$entity's", player.getName())
                 .replace("$positon", 
-                String.join(", ", 
-                    Integer.toString(location.getBlockX()), 
-                    Integer.toString(location.getBlockY()), 
-                    Integer.toString(location.getBlockY()) 
-                ) );
+                    String.join(", ", 
+                        Integer.toString(location.getBlockX()), 
+                        Integer.toString(location.getBlockY()), 
+                        Integer.toString(location.getBlockY()) 
+                    ) )
+                .replace("&", "§");
         if (!broadcastMessage.equals("")) {
             Bukkit.broadcastMessage( broadcastMessage );
         }
@@ -1414,20 +1415,21 @@ public class GraveManager {
                     equipment.setItemInMainHand( graveInventory.getMainHand() );
                     equipment.setItemInMainHandDropChance(0.0f);
 
-                    equipment.setChestplate( graveInventory.getEquipment().getChestplate() );
+                    equipment.setChestplate( graveInventory.getEquipment()[2] );
                     equipment.setChestplateDropChance(0.0f);
 
-                    equipment.setLeggings( graveInventory.getEquipment().getLeggings() );
+                    equipment.setLeggings( graveInventory.getEquipment()[1] );
                     equipment.setLeggingsDropChance(0.0f);
 
-                    equipment.setBoots( graveInventory.getEquipment().getBoots() );
+                    equipment.setBoots( graveInventory.getEquipment()[0] );
                     equipment.setBootsDropChance(0.0f);
                 }
             }
 
-            double maxHealth = plugin.getConfig().getDouble("setting.zombieHealthMultiple") * graveInventory.getDeathCount() + plugin.getConfig().getInt("setting.zombieBaseHealth");
-            double maxAttack = plugin.getConfig().getDouble("setting.zombieAttackMultiple") * graveInventory.getDeathCount() + livingEntity.getAttribute( Attribute.GENERIC_ATTACK_DAMAGE ).getBaseValue();
-            double maxSpeed  = plugin.getConfig().getDouble("setting.zombieSpeedMultiple") * graveInventory.getDeathCount() + livingEntity.getAttribute( Attribute.GENERIC_MOVEMENT_SPEED ).getBaseValue();
+            double maxHealth = plugin.getConfig().getDouble("settings.zombieBaseHealth")                    + plugin.getConfig().getDouble("settings.zombieHealthMultiple") * graveInventory.getDeathCount();
+            double maxAttack = livingEntity.getAttribute( Attribute.GENERIC_ATTACK_DAMAGE ).getBaseValue()  + plugin.getConfig().getDouble("settings.zombieAttackMultiple") * graveInventory.getDeathCount();
+            double maxSpeed  = livingEntity.getAttribute( Attribute.GENERIC_MOVEMENT_SPEED ).getBaseValue() + plugin.getConfig().getDouble("settings.zombieSpeedMultiple") * graveInventory.getDeathCount();
+            
             livingEntity.getAttribute( Attribute.GENERIC_MAX_HEALTH ).setBaseValue( maxHealth );
             livingEntity.setHealth( maxHealth );
             livingEntity.getAttribute( Attribute.GENERIC_ATTACK_DAMAGE ).setBaseValue( maxAttack );
