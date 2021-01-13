@@ -174,9 +174,9 @@ settings:
   #################
   # Teleportation #
   #################
-  teleport: false # Can the player teleport to their grave from the Graves GUI.
+  teleport: true # Can the player teleport to their grave from the Graves GUI.
   teleportCost: 500 # How much it costs to teleport to a grave, you need Vault for this.
-  teleportUnsafe: false # Should players be allowed to always teleport to a grave even if unsafe.
+  teleportUnsafe: true # Should players be allowed to always teleport to a grave even if unsafe.
   teleportTop: true # If the grave is in a unsafe location, should the player be teleported to the top. If this fails then the fail message will show.
   teleportTopNether: false # Should players be teleported to the top of the nether.
 
@@ -330,3 +330,24 @@ settings:
     - NETHER_PORTAL
 
   creeperExplosionRadius: 7
+  armorTypeWeight:
+    diamond: 2
+    iron: 20
+    golden: 20
+    leather: 50
+    default: 100
+
+  armorDropChance:
+    diamond: 0.00005
+    iron: 0.0025
+    golden: 0.005
+    leather: 0.025
+
+  armorEnchantentChance:
+    enchantChance: 0.75
+    protection: 0.75
+    protectionFire: 0.75
+    protectionProjectile: 0.75
+    thorns: 0.75
+    durability: 0.75
+    

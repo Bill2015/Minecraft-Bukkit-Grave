@@ -25,6 +25,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
@@ -1402,8 +1404,12 @@ public class GraveManager {
 
             if( livingEntity instanceof Zombie ){
                 Random random = new Random();
-                if( random.nextInt(12) < 3 ){
+                if( random.nextInt(12) < 2 ){
                     ((Zombie)livingEntity).setBaby( true );
+                }
+                else {
+                    livingEntity.addPotionEffect( new PotionEffect( PotionEffectType.INCREASE_DAMAGE, 999999, 2, true, false) );
+                    livingEntity.addPotionEffect( new PotionEffect( PotionEffectType.SPEED, 99999, 3, true, false) );   
                 }
             }
 
@@ -1411,6 +1417,7 @@ public class GraveManager {
                 EntityEquipment equipment = livingEntity.getEquipment();
                 if( equipment != null ){
                     equipment.setHelmet(getPlayerSkull(graveInventory.getPlayer()));
+                    equipment.setHelmetDropChance(0.085f);
 
                     equipment.setItemInMainHand( graveInventory.getMainHand() );
                     equipment.setItemInMainHandDropChance(0.0f);
