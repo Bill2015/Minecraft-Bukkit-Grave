@@ -1422,14 +1422,22 @@ public class GraveManager {
                     equipment.setItemInMainHand( graveInventory.getMainHand() );
                     equipment.setItemInMainHandDropChance(0.0f);
 
-                    equipment.setChestplate( graveInventory.getEquipment()[2] );
-                    equipment.setChestplateDropChance(0.0f);
+                    if( graveInventory.getEquipment()[2] != null ){
+                        equipment.setChestplate( graveInventory.getEquipment()[2] );
+                        equipment.setChestplateDropChance(0.0f);
+                    }
 
-                    equipment.setLeggings( graveInventory.getEquipment()[1] );
-                    equipment.setLeggingsDropChance(0.0f);
+                    if( graveInventory.getEquipment()[1] != null ){
+                        equipment.setLeggings( graveInventory.getEquipment()[1] );
+                        equipment.setLeggingsDropChance(0.0f);
+                    }
 
-                    equipment.setBoots( graveInventory.getEquipment()[0] );
-                    equipment.setBootsDropChance(0.0f);
+                    if( graveInventory.getEquipment()[0] != null ){
+                        equipment.setBoots( graveInventory.getEquipment()[0] );
+                        equipment.setBootsDropChance(0.0f);
+                    }
+
+
                 }
             }
 

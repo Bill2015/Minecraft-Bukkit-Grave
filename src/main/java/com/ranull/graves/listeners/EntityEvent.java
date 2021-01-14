@@ -11,24 +11,19 @@ import com.ranull.graves.randomizer.Armor;
 import com.ranull.graves.randomizer.EquimentRandomizer;
 import com.ranull.graves.randomizer.Weapon;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+
 
 // Just Make creeper destroy the torch when explsion
 public class EntityEvent implements Listener{
@@ -57,14 +52,13 @@ public class EntityEvent implements Listener{
         };
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onZombieSpawn( CreatureSpawnEvent event ){
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawn( CreatureSpawnEvent event ){
         if (event.isCancelled()) 
             return;
         if( event.getEntityType() == EntityType.ZOMBIE ){                
             Zombie zombie = (Zombie)event.getEntity();
-
-            if( zombie.getCustomName() == null || zombie.getCustomName().equals("") ){
+            if( zombie.getCustomName() == null ){
 
                 Armor armor = equipRandomizer.nextArmor();
                 armor.setWearingEntity( zombie );
@@ -72,10 +66,16 @@ public class EntityEvent implements Listener{
                 Weapon weapon = equipRandomizer.nextWeapon();
                 weapon.setWearingEntity( zombie );
                 weapon.setDropChance( zombie , weaponDropChance );
-
             }
-
         } 
+        else if( event.getEntityType() == EntityType.SKELETON ){
+            Skeleton skeleton = (Skeleton)event.getEntity();
+            if( skeleton.getCustomName() == null ){
+                Armor armor = equipRandomizer.nextArmor();
+                armor.setWearingEntity( skeleton );
+                armor.setDropChance( skeleton , armorDropChance );
+            }
+        }
     }
 
     @EventHandler

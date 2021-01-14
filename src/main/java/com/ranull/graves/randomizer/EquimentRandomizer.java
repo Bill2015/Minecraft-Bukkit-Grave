@@ -19,6 +19,7 @@ public class EquimentRandomizer {
     private int armorTotalWeight = 0;
     private int armorMaterialWeight[];
     private double armorEnchantChance;
+    private double armorWearingChance;
     private EquipEnchantment armorEnchant[];
 
     private static String WEAPON_MATERIAL[]  = { "DIAMOND", "IRON", "GOLDEN", "STONE", "WOODEN"};
@@ -45,7 +46,8 @@ public class EquimentRandomizer {
             config.getInt("settings.armor.materialWeight.default")
 
         };
-        armorEnchantChance = config.getDouble("settings.armor.enchantentChance.enchantChance");
+        armorWearingChance = config.getDouble("settings.armor.wearingChance");
+        armorEnchantChance = config.getDouble("settings.armor.enchantChance");
         armorEnchant = new EquipEnchantment[]{
             new EquipEnchantment( Enchantment.PROTECTION_ENVIRONMENTAL, 4, config.getDouble("settings.armor.enchantentChance.protection") ),
             new EquipEnchantment( Enchantment.PROTECTION_FIRE,          4, config.getDouble("settings.armor.enchantentChance.protectionFire") ),
@@ -72,7 +74,7 @@ public class EquimentRandomizer {
             config.getInt("settings.weapon.typeWeight.default")
 
         };
-        weaponEnchantChance = config.getDouble("settings.weapon.enchantentChance.enchantChance");
+        weaponEnchantChance = config.getDouble("settings.weapon.enchantChance");
         weaponEnchant = new EquipEnchantment[]{
             new EquipEnchantment( Enchantment.DAMAGE_ALL,       5, config.getDouble("settings.weapon.enchantentChance.damage") ),
             new EquipEnchantment( Enchantment.DIG_SPEED,        3, config.getDouble("settings.weapon.enchantentChance.digSpeed") ),
@@ -117,22 +119,24 @@ public class EquimentRandomizer {
         
         String armorType = ARMOR_MATERIAL[ type ];
         for(int i = 0, size = equipments.length; i < size; i += 1){
-            equipments[i] = new ItemStack( Material.getMaterial( String.join("_", armorType, ARMOR_NAME[ i ] ) ) );
-            int itemQuality = 0;
-            for (EquipEnchantment enchant : armorEnchant ) {
-                if( random.nextDouble() <= armorEnchantChance ){
-                    if( random.nextDouble() <= enchant.getChance() ){
-                        int lvl = nextGaussian(0, enchant.getMaxLevel() );
-                        try {
-                            equipments[i].addEnchantment( enchant.getEnchantment(), lvl );
-                            itemQuality += lvl;
-                        } catch (IllegalArgumentException e) {
-                            continue;
+            if( random.nextDouble() <= armorWearingChance ){
+                equipments[i] = new ItemStack( Material.getMaterial( String.join("_", armorType, ARMOR_NAME[ i ] ) ) );
+                int itemQuality = 0;
+                for (EquipEnchantment enchant : armorEnchant ) {
+                    if( random.nextDouble() <= armorEnchantChance ){
+                        if( random.nextDouble() <= enchant.getChance() ){
+                            int lvl = nextGaussian(0, enchant.getMaxLevel() );
+                            try {
+                                equipments[i].addEnchantment( enchant.getEnchantment(), lvl );
+                                itemQuality += lvl;
+                            } catch (IllegalArgumentException e) {
+                                continue;
+                            }
                         }
                     }
                 }
+                increaseReapirCount( equipments[i], itemQuality * 100 );
             }
-            increaseReapirCount( equipments[i], itemQuality * 100 );
         }
 
 
