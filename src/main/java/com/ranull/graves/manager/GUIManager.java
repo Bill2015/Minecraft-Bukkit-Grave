@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,31 +35,47 @@ public class GUIManager {
     }
 
     public void teleportGrave(Player player, ItemStack itemStack) {
-        double teleportCost = graveManager.getTeleportCost(player);
+        int teleportCost = (int)graveManager.getTeleportCost(player);
 
-        if (vaultHook != null && player.getUniqueId()
-                .equals(UUID.fromString(Objects.requireNonNull(Objects.requireNonNull(itemStack.getItemMeta())
-                        .getPersistentDataContainer().get(new NamespacedKey(plugin, "graveOwner"),
-                                PersistentDataType.STRING))))) {
-            double playerBalance = vaultHook.getEconomy().getBalance(player);
+        // if (vaultHook != null && player.getUniqueId()
+        //         .equals(UUID.fromString(Objects.requireNonNull(Objects.requireNonNull(itemStack.getItemMeta())
+        //                 .getPersistentDataContainer().get(new NamespacedKey(plugin, "graveOwner"),
+        //                         PersistentDataType.STRING))))) {
+        //     double playerBalance = vaultHook.getEconomy().getBalance(player);
 
-            if (playerBalance < teleportCost) {
-                String notEnoughMoneyMessage = Objects.requireNonNull(plugin.getConfig()
-                        .getString("settings.notEnoughMoneyMessage"))
-                        .replace("$money", String.valueOf(teleportCost))
-                        .replace("&", "§");
+        //     if (playerBalance < teleportCost) {
+        //         String notEnoughMoneyMessage = Objects.requireNonNull(plugin.getConfig()
+        //                 .getString("settings.notEnoughMoneyMessage"))
+        //                 .replace("$money", String.valueOf(teleportCost))
+        //                 .replace("&", "§");
 
-                if (!notEnoughMoneyMessage.equals("")) {
-                    player.sendMessage(notEnoughMoneyMessage);
-                }
+        //         if (!notEnoughMoneyMessage.equals("")) {
+        //             player.sendMessage(notEnoughMoneyMessage);
+        //         }
 
-                return;
-            } else {
-                vaultHook.getEconomy().withdrawPlayer(player, teleportCost);
+        //         return;
+        //     } 
+        //     else {
+        //         vaultHook.getEconomy().withdrawPlayer(player, teleportCost);
+        //     }
+        // }
+        Location graveLocation = getGraveLocation( itemStack );
+        int perBlock = plugin.getConfig().getInt("settings.teleportPerBlock");
+        teleportCost = Math.min( (int)(player.getLocation().distance( graveLocation ) / perBlock) + teleportCost, 40 );
+
+        if( player.getLevel() < teleportCost ){
+            String notEnougLevelMessage = Objects.requireNonNull(plugin.getConfig()
+                             .getString("settings.notEnoughLevelMessage"))
+                             .replace("$level", String.valueOf(teleportCost))
+                             .replace("&", "§");
+            if (!notEnougLevelMessage.equals("")) {
+                player.sendMessage(notEnougLevelMessage);
             }
+            return;
         }
-
-        Location graveLocation = getGraveLocation(itemStack);
+        else{
+            player.setLevel( (player.getLevel() - teleportCost) );
+        }
 
         if (graveLocation != null) {
             Location graveTeleportLocation = graveManager.getTeleportLocation(player, graveLocation);
@@ -73,8 +91,8 @@ public class GUIManager {
                 }
 
                 String teleportMessage = Objects.requireNonNull(plugin.getConfig()
-                        .getString("settings.teleportMessage"))
-                        .replace("$money", String.valueOf(teleportCost))
+                        .getString("settings.teleportMessageLevel"))
+                        .replace("$level", String.valueOf(teleportCost))
                         .replace("&", "§");
 
                 if (!teleportMessage.equals("")) {
@@ -86,8 +104,15 @@ public class GUIManager {
                 if (teleportSound != null && !teleportSound.equals("")) {
                     player.getWorld().playSound(player.getLocation(),
                             Sound.valueOf(teleportSound.toUpperCase()), 1.0F, 1.0F);
+
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 0.5F);
+
                 }
-            } else {
+                player.addPotionEffect( new PotionEffect( PotionEffectType.BLINDNESS, 200, 1, false, true ) );
+                player.addPotionEffect( new PotionEffect( PotionEffectType.CONFUSION, 400, 1, false, true ) );
+
+            } 
+            else {
                 String teleportFailedMessage = Objects.requireNonNull(plugin.getConfig()
                         .getString("settings.teleportFailedMessage"))
                         .replace("$money", String.valueOf(teleportCost))

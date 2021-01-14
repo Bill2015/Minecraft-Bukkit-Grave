@@ -66,11 +66,13 @@ settings:
   deathMessage: "&8[&7Graves&8] &fYou have a death chest at &7$x&fx, &7$y&fy, &7$z&fz that lasts for &7$time&f!"
   tokenNoTokenMessage: "&8[&7Graves&8] &fA grave was not created because you didn't have a &7$name&f!"
   teleportMessage: "&8[&7Graves&8] &fYou teleported to your grave for &7$money&f!"
+  teleportMessageLevel: "&8[&7Graves&8] &fYou teleported to your grave for &7$level&f level!"
   teleportTopMessage: "&8[&7Graves&8] &fGrave was in an unsafe location, you have been teleported nearby."
   teleportFailedMessage: "&8[&7Graves&8] &fTeleport failed! Teleport location is unsafe!"
   teleportDisabledMessage: "&8[&7Graves&8] &fGrave teleportation is disabled!"
   expMessage: "&8[&7Graves&8] &fLooted &7$level &flevels from grave!"
   notEnoughMoneyMessage: "&8[&7Graves&8] &fYou don't have enough money! You need &7$money&f!"
+  notEnoughLevelMessage: "&8[&7Graves&8] &fYou don't have enough level! You need &7$level&f!"
   ignoreMessage: "&8[&7Graves&8] &fA grave was not created because you died in &7$block&f!"
   permissionDeniedMessage: "&8[&7Graves&8] &fPermission Denied!"
   protectProtectedMessage: "&c&lProtected"
@@ -175,7 +177,7 @@ settings:
   # Teleportation #
   #################
   teleport: true # Can the player teleport to their grave from the Graves GUI.
-  teleportCost: 500 # How much it costs to teleport to a grave, you need Vault for this.
+  teleportCost: 20 # How much it costs to teleport to a grave, you need Vault for this.
   teleportUnsafe: true # Should players be allowed to always teleport to a grave even if unsafe.
   teleportTop: true # If the grave is in a unsafe location, should the player be teleported to the top. If this fails then the fail message will show.
   teleportTopNether: false # Should players be teleported to the top of the nether.
@@ -329,25 +331,60 @@ settings:
     - POLISHED_ANDESITE_SLAB
     - NETHER_PORTAL
 
-  creeperExplosionRadius: 7
-  armorTypeWeight:
-    diamond: 2
-    iron: 20
-    golden: 20
-    leather: 50
-    default: 100
+  creeperExplosionRadiusMutiple: 1.5
+  armor:
+    materialWeight:
+      default: 20
+      diamond: 2
+      iron: 20
+      golden: 20
+      leather: 50
 
-  armorDropChance:
-    diamond: 0.00005
-    iron: 0.0025
-    golden: 0.005
-    leather: 0.025
+    dropChance:
+      diamond: 0.00005
+      iron: 0.0025
+      golden: 0.005
+      leather: 0.025
 
-  armorEnchantentChance:
-    enchantChance: 0.75
-    protection: 0.75
-    protectionFire: 0.75
-    protectionProjectile: 0.75
-    thorns: 0.75
-    durability: 0.75
+    enchantentChance:
+      enchantChance: 0.75
+      protection: 0.75
+      protectionFire: 0.75
+      protectionProjectile: 0.75
+      thorns: 0.75
+      durability: 0.75
+
+  weapon:
+    materialWeight:
+      default: 20
+      diamond: 2
+      iron: 20
+      golden: 20
+      stone: 50
+      wooden: 100
+
+    typeWeight:
+      default: 20
+      axe: 20
+      sword: 20
+      shovel: 20
+
+    dropChance:
+      diamond: 0.00005
+      iron: 0.0025
+      golden: 0.005
+      stone: 0.025
+      wooden: 0.025
+
+    enchantentChance:
+      enchantChance: 1.0
+      damage: 0.75
+      digSpeed: 0.75
+      looting: 0.75
+      knockback: 0.75
+      fire: 0.75
+      durability: 0.75
+    
+    
+
     

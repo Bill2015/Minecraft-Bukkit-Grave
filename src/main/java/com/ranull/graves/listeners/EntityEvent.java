@@ -9,6 +9,7 @@ import javax.print.attribute.standard.Media;
 import com.ranull.graves.Graves;
 import com.ranull.graves.randomizer.Armor;
 import com.ranull.graves.randomizer.EquimentRandomizer;
+import com.ranull.graves.randomizer.Weapon;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,16 +33,27 @@ import org.bukkit.scheduler.BukkitRunnable;
 // Just Make creeper destroy the torch when explsion
 public class EntityEvent implements Listener{
     private Graves plugin;
-    private EquimentRandomizer armorRandomizer;
-    private float[] armorDropChance;
+    private final EquimentRandomizer equipRandomizer;
+    private final float[] armorDropChance;
+    private final float[] weaponDropChance;
+
+    private final float creeperExplsionRadius;
     public EntityEvent(Graves plugin) {
         this.plugin = plugin;
-        this.armorRandomizer = new EquimentRandomizer( plugin );
+        this.equipRandomizer = new EquimentRandomizer( plugin );
+        this.creeperExplsionRadius = plugin.getConfig().getInt( "settings.creeperExplosionRadiusMutiple" );
         this.armorDropChance = new float[]{
-            (float)plugin.getConfig().getDouble("setting.armorDropChance.diamond"),
-            (float)plugin.getConfig().getDouble("setting.armorDropChance.iron"),
-            (float)plugin.getConfig().getDouble("setting.armorDropChance.golden"),
-            (float)plugin.getConfig().getDouble("setting.armorDropChance.leather"),
+            (float)plugin.getConfig().getDouble("settings.armor.dropChance.diamond"),
+            (float)plugin.getConfig().getDouble("settings.armor.dropChance.iron"),
+            (float)plugin.getConfig().getDouble("settings.armor.dropChance.golden"),
+            (float)plugin.getConfig().getDouble("settings.armor.dropChance.leather")
+        };
+        this.weaponDropChance = new float[]{
+            (float)plugin.getConfig().getDouble("settings.weapon.dropChance.diamond"),
+            (float)plugin.getConfig().getDouble("settings.weapon.dropChance.iron"),
+            (float)plugin.getConfig().getDouble("settings.weapon.dropChance.golden"),
+            (float)plugin.getConfig().getDouble("settings.weapon.dropChance.stone"),
+            (float)plugin.getConfig().getDouble("settings.weapon.dropChance.wooden")
         };
     }
 
@@ -49,34 +61,18 @@ public class EntityEvent implements Listener{
     public void onZombieSpawn( CreatureSpawnEvent event ){
         if (event.isCancelled()) 
             return;
-        if( event.getEntityType() == EntityType.ZOMBIE ){
+        if( event.getEntityType() == EntityType.ZOMBIE ){                
             Zombie zombie = (Zombie)event.getEntity();
 
-            Armor armor = armorRandomizer.nextArmor();
-            zombie.getEquipment().setArmorContents( armor.getArmor() );
-            if( armor.getArmorType() == Material.DIAMOND ){
-                zombie.getEquipment().setChestplateDropChance( armorDropChance[0] );
-                zombie.getEquipment().setBootsDropChance( armorDropChance[0] );
-                zombie.getEquipment().setLeggingsDropChance( armorDropChance[0] );
-                zombie.getEquipment().setHelmetDropChance( armorDropChance[0] );
-            }
-            else if( armor.getArmorType() == Material.IRON_INGOT ){
-                zombie.getEquipment().setChestplateDropChance( armorDropChance[1] );
-                zombie.getEquipment().setBootsDropChance( armorDropChance[1] );
-                zombie.getEquipment().setLeggingsDropChance( armorDropChance[1] );
-                zombie.getEquipment().setHelmetDropChance( armorDropChance[1] );
-            }
-            else if( armor.getArmorType() == Material.GOLD_INGOT ){
-                zombie.getEquipment().setChestplateDropChance( armorDropChance[2] );
-                zombie.getEquipment().setBootsDropChance( armorDropChance[2] );
-                zombie.getEquipment().setLeggingsDropChance( armorDropChance[2] );
-                zombie.getEquipment().setHelmetDropChance( armorDropChance[2] );
-            }
-            else if( armor.getArmorType() == Material.LEATHER ){
-                zombie.getEquipment().setChestplateDropChance( armorDropChance[3] );
-                zombie.getEquipment().setBootsDropChance( armorDropChance[3] );
-                zombie.getEquipment().setLeggingsDropChance( armorDropChance[3] );
-                zombie.getEquipment().setHelmetDropChance( armorDropChance[3] );
+            if( zombie.getCustomName() == null || zombie.getCustomName().equals("") ){
+
+                Armor armor = equipRandomizer.nextArmor();
+                armor.setWearingEntity( zombie );
+                armor.setDropChance( zombie , armorDropChance );
+                Weapon weapon = equipRandomizer.nextWeapon();
+                weapon.setWearingEntity( zombie );
+                weapon.setDropChance( zombie , weaponDropChance );
+
             }
 
         } 
@@ -89,7 +85,7 @@ public class EntityEvent implements Listener{
 
         if( event.getEntity() instanceof Creeper ){
             Creeper creeper = (Creeper)event.getEntity();
-            int radius = plugin.getConfig().getInt( "settings.creeperExplosionRadius" );
+            int radius = (int)(creeper.getExplosionRadius() * creeperExplsionRadius);
             List<Block> blockList = EntityEvent.getNearbyBlocks( creeper.getLocation(), radius );
 
             for (Block block : blockList) {
